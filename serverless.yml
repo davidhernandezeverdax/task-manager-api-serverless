@@ -1,0 +1,65 @@
+service: task-manager-api-serverless
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: dev
+  region: us-east-1
+  environment:
+    DYNAMODB_TABLE: ${self:provider.stage}-${self:service}-tasks
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+functions:
+  createTask:
+    handler: src/handlers/createTask.handler
+    events:
+      - http:
+          path: tasks
+          method: post
+          cors: true
+
+  getTask:
+    handler: src/handlers/getTask.handler
+    events:
+      - http:
+          path: tasks/{id}
+          method: get
+          cors: true
+
+  updateTask:
+    handler: src/handlers/updateTask.handler
+    events:
+      - http:
+          path: tasks/{id}
+          method: put
+          cors: true
+
+  deleteTask:
+    handler: src/handlers/deleteTask.handler
+    events:
+      - http:
+          path: tasks/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    TaskTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST

@@ -1,0 +1,14 @@
+{
+  "name": "task-manager-api-serverless",
+  "version": "1.0.0",
+  "description": "This project is a serverless RESTful API for task management, built with Node.js, AWS Lambda, AWS DynamoDB, Serverless. It allows users to create, read, update, and delete tasks. The API is designed with clean architecture, ensuring clear separation of concerns and ease of maintenance",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Hernandez",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
+}
